@@ -8,7 +8,7 @@ properties([
         ])
 ])
 pipeline {
-  agent none
+  agent any
 
   options {
     ansiColor('xterm')
@@ -31,7 +31,7 @@ pipeline {
 
   stages {
     // stage("Checkout SCM") {
-    //   agent { label "master"} 
+    //   //agent { label "master"} 
     //   steps {
     //     script{
     //       currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
@@ -47,7 +47,7 @@ pipeline {
     //   }
     // }
     // stage("Get vault value") {
-    //   agent { label "master"} 
+    //   //agent { label "master"} 
     //   steps {
     //     script {
     //       dir ('deployment/deployment/dev/api') {
@@ -70,7 +70,7 @@ pipeline {
     // }
     
     stage('Get Git changes') {
-      agent { label "master"} 
+      //agent { label "master"} 
       steps {
         script {
           dir ('deployment/dev/api') {
@@ -82,7 +82,7 @@ pipeline {
       }
     }
     stage("Build") {
-      agent { label "master"} 
+      //agent { label "master"} 
       steps {
         script {
           dir ('deployment/dev/api') {
@@ -105,7 +105,7 @@ pipeline {
       }
     }
     stage("Deploy Stack") {
-      agent { label "deploy"} 
+    //   agent { label "deploy"} 
       environment {
           ANSIBLE_PATH = "/usr/bin"
       }
