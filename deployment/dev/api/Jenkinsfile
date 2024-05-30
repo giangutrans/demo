@@ -4,7 +4,7 @@ def project = "https://github.com/giangutrans/qualgo.git"
 
 properties([
         parameters([
-          gitParameter(branchFilter: 'origin/(dev.*|master)', defaultValue: 'master', name: 'BRANCH', type: 'PT_BRANCH', listSize: "10", useRepository: "${project}", quickFilterEnabled: true)
+          gitParameter(branchFilter: 'origin/(dev.*|main)', defaultValue: 'master', name: 'BRANCH', type: 'PT_BRANCH', listSize: "10", useRepository: "${project}", quickFilterEnabled: true)
         ])
 ])
 pipeline {
