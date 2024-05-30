@@ -27,7 +27,8 @@ spec:
         image: devopsqualgo557.azurecr.io/dev/api:tag
         volumeMounts:
         - name: secrets-store01-inline
-          mountPath: "/mnt/secrets-store"
+          mountPath: "/app"
+          subPath: ".env"
           readOnly: true
         ports:
         - containerPort: 80
@@ -38,9 +39,9 @@ spec:
             value: 064d951e-4e03-4759-9b5d-edddb364da36
           - name: AZURE_TENANT_ID
             value: f73ef2fd-2720-451a-b747-eb0a6630b23f
-        envFrom:
-        - secretRef:
-            name: qualgosecret
+        # envFrom:
+        # - secretRef:
+        #     name: qualgosecret
       volumes:
       - name: secrets-store01-inline
         csi:

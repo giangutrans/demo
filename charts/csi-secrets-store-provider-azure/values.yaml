@@ -158,7 +158,7 @@ secrets-store-csi-driver:
       pullPolicy: IfNotPresent
 
   enableSecretRotation: true
-  rotationPollInterval: 15s
+  rotationPollInterval: 1s
   # Refer to https://secrets-store-csi-driver.sigs.k8s.io/load-tests.html for more details on actions to take before enabling this feature
   filteredWatchSecret: true
 
