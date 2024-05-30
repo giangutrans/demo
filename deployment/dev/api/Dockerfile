@@ -1,4 +1,4 @@
-FROM registry.utrans.vn/cache/tiangolo/uvicorn-gunicorn-fastapi:python3.9
+FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
 WORKDIR /app
 COPY . .
 COPY .env.local /app/.env
