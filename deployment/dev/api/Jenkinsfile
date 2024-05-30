@@ -88,10 +88,10 @@ pipeline {
           dir ('deployment/dev/api') {
             currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
             // Define Docker build arguments
-            // echo "===================== DOCKER PULL IMAGE CACHE ====================="
-            // docker.withRegistry(DOCKER_REGISTRY_URL, DOCKER_REGISTRY_CREDENTIALS) {
-            //   docker.image("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG_LATEST}").pull()
-            // }
+            echo "===================== DOCKER PULL IMAGE CACHE ====================="
+            docker.withRegistry(DOCKER_REGISTRY_URL, DOCKER_REGISTRY_CREDENTIALS) {
+              docker.image("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG_LATEST}").pull()
+            }
             def image_caching=" --cache-from ${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG_LATEST}"
             echo "===================== DOCKER BUILD ====================="
             docker.withRegistry(DOCKER_REGISTRY_URL, DOCKER_REGISTRY_CREDENTIALS) {
