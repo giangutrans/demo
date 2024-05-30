@@ -32,6 +32,12 @@ spec:
       objectName: QUALGO
     - key: API_MONGO_USER
       objectName: QUALGO
+    - key: MONGO_HOST
+      objectName: QUALGO
+    - key: MONGO_PORT
+      objectName: QUALGO
+    - key: NEXT_PUBLIC_API_ENDPOINT
+      objectName: QUALGO
     secretName: qualgosecret
     type: Opaque  
     

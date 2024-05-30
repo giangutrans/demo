@@ -4,6 +4,8 @@ kind: Deployment
 metadata:
   name: api
   namespace: default
+  annotations:
+    secret.reloader.stakater.com/reload: "qualgosecret"
   labels:
     app: api
 spec:
