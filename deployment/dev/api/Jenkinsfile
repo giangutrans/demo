@@ -50,7 +50,7 @@ pipeline {
     //   agent { label "master"} 
     //   steps {
     //     script {
-    //       dir ('deployment/dev/api') {
+    //       dir ('deployment/deployment/dev/api') {
     //         currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
     //         echo "===================== GET VAULT AND CREATE .ENV ====================="
     //         withCredentials([
@@ -73,7 +73,7 @@ pipeline {
       agent { label "master"} 
       steps {
         script {
-          dir ('dev/api') {
+          dir ('deployment/dev/api') {
             currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
             echo "===================== CHECK GIT CHANGE ====================="
             (currentRevision, changeString) = gitChange("app")
@@ -85,7 +85,7 @@ pipeline {
       agent { label "master"} 
       steps {
         script {
-          dir ('dev/api') {
+          dir ('deployment/dev/api') {
             currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
             // Define Docker build arguments
             // echo "===================== DOCKER PULL IMAGE CACHE ====================="
@@ -112,7 +112,7 @@ pipeline {
       steps {
         script {
           currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
-          dir("dev/api") {
+          dir("deployment/dev/api") {
             echo "===================== DOCKER DEPLOY STACK ====================="
             docker.withRegistry(DOCKER_REGISTRY_URL, DOCKER_REGISTRY_CREDENTIALS) {
               docker.image("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG_LATEST}").pull()
