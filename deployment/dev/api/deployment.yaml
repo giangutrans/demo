@@ -18,6 +18,8 @@ spec:
         azure.workload.identity/use: "true"
     spec:
       serviceAccountName: "qualgo-sa"
+      imagePullSecrets:
+      - name: regcred
       containers:
       - name: devops-container
         image: devopsqualgo557.azurecr.io/dev/api:tag
