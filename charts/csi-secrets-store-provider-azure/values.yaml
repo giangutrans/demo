@@ -1,0 +1,183 @@
+nameOverride: ""
+fullnameOverride: ""
+
+# One or more secrets to be used when pulling images
+imagePullSecrets: []
+# - name: myRegistryKeySecretName
+
+# logging format json
+# Default is text.
+logFormatJSON: false
+
+# log level. Uses V logs (klog)
+logVerbosity: 0
+
+enableArcExtension: false
+
+linux:
+  image:
+    repository: mcr.microsoft.com/oss/azure/secrets-store/provider-azure
+    tag: v1.5.2
+    pullPolicy: IfNotPresent
+  nodeSelector: {}
+  # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
+  # An empty key with operator Exists matches all keys, values and effects which means this will tolerate everything.
+  tolerations:
+  - operator: Exists
+  enabled: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 100Mi
+    limits:
+      cpu: 50m
+      memory: 100Mi
+  podLabels: {}
+  podAnnotations: {}
+  priorityClassName: ""
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  privileged: false
+  # If provided, the userAgent string will be appended to the
+  # AKV provider user agents for all adal and keyvault requests.
+  customUserAgent: ""
+  healthzPort: 8989
+  healthzPath: "/healthz"
+  healthzTimeout: "5s"
+  volumes: []
+  volumeMounts: []
+  kubeletRootDir: /var/lib/kubelet
+  providersDir: /var/run/secrets-store-csi-providers
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: type
+            operator: NotIn
+            values:
+            - virtual-kubelet
+  # https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy
+  dnsPolicy: ""
+
+windows:
+  image:
+    repository: mcr.microsoft.com/oss/azure/secrets-store/provider-azure
+    tag: v1.5.2
+    pullPolicy: IfNotPresent
+  nodeSelector: {}
+  # ref: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
+  # An empty key with operator Exists matches all keys, values and effects which means this will tolerate everything.
+  tolerations:
+  - operator: Exists
+  enabled: false
+  resources:
+    requests:
+      cpu: 100m
+      memory: 200Mi
+    limits:
+      cpu: 100m
+      memory: 200Mi
+  podLabels: {}
+  podAnnotations: {}
+  priorityClassName: ""
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+  # If provided, the userAgent string will be appended to the
+  # AKV provider user agents for all adal and keyvault requests.
+  customUserAgent: ""
+  healthzPort: 8989
+  healthzPath: "/healthz"
+  healthzTimeout: "5s"
+  volumes: []
+  volumeMounts: []
+  kubeletRootDir: C:\var\lib\kubelet
+  providersDir: C:\k\secrets-store-csi-providers
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: type
+            operator: NotIn
+            values:
+            - virtual-kubelet
+
+## Configuration values for the secrets-store-csi-driver dependency.
+## ref: https://github.com/kubernetes-sigs/secrets-store-csi-driver/tree/master/charts/secrets-store-csi-driver/README.md
+##
+secrets-store-csi-driver:
+  install: true
+  # By default helm will append the chart release name to the dependent chart names.
+  # Explicitly setting the fullnameOverride will override this behavior.
+  fullnameOverride: secrets-store-csi-driver
+  linux:
+    enabled: true
+    kubeletRootDir: /var/lib/kubelet
+    metricsAddr: ":8080"
+    priorityClassName: ""
+    image:
+      repository: mcr.microsoft.com/oss/kubernetes-csi/secrets-store/driver
+      tag: v1.4.3
+      pullPolicy: IfNotPresent
+    registrarImage:
+      repository: mcr.microsoft.com/oss/kubernetes-csi/csi-node-driver-registrar
+      tag: v2.10.0
+      pullPolicy: IfNotPresent
+    livenessProbeImage:
+      repository: mcr.microsoft.com/oss/kubernetes-csi/livenessprobe
+      tag: v2.12.0
+      pullPolicy: IfNotPresent
+    crds:
+      image:
+        repository: mcr.microsoft.com/oss/kubernetes-csi/secrets-store/driver-crds
+        tag: v1.4.3
+        pullPolicy: IfNotPresent
+    providersDir: /var/run/secrets-store-csi-providers
+
+  windows:
+    enabled: false
+    kubeletRootDir: C:\var\lib\kubelet
+    metricsAddr: ":8080"
+    priorityClassName: ""
+    image:
+      repository: mcr.microsoft.com/oss/kubernetes-csi/secrets-store/driver
+      tag: v1.4.3
+      pullPolicy: IfNotPresent
+    registrarImage:
+      repository: mcr.microsoft.com/oss/kubernetes-csi/csi-node-driver-registrar
+      tag: v2.10.0
+      pullPolicy: IfNotPresent
+    livenessProbeImage:
+      repository: mcr.microsoft.com/oss/kubernetes-csi/livenessprobe
+      tag: v2.12.0
+      pullPolicy: IfNotPresent
+
+  enableSecretRotation: true
+  rotationPollInterval: 15s
+  # Refer to https://secrets-store-csi-driver.sigs.k8s.io/load-tests.html for more details on actions to take before enabling this feature
+  filteredWatchSecret: true
+
+  syncSecret:
+    enabled: true
+
+  tokenRequests:
+  - audience: api://AzureADTokenExchange
+
+## Install default service account
+rbac:
+  install: true
+  pspEnabled: false
+
+# explicitly reconstruct the pem chain in the order: SERVER, INTERMEDIATE, ROOT
+constructPEMChain: true
+
+# Write cert and key in separate files. The individual files will be named as <secret-name>.crt and <secret-name>.key. These files will be created in addition to the single file.
+writeCertAndKeyInSeparateFiles: false
+
+# Port that serves metrics
+metricsAddr: "8898"

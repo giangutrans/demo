@@ -1,0 +1,8 @@
+#profile-popover .ant-popover-inner-content {
+    padding: 0 !important;
+}
+.focus-notification:hover {
+    border-radius: 10px;
+    background-color: rgb(213, 234, 255);
+    opacity: 0.6;
+}

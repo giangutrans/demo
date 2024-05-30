@@ -1,0 +1,54 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: api-vs
+  namespace: default
+spec:
+  hosts:
+  - "api.yanyicivic.com"
+  gateways:
+  - istio-ingress/https
+  http:
+  - route:
+    - destination:
+        host: "api-svc"
+        port:
+          number: 80
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: https
+  namespace: istio-ingress
+spec:
+  selector:
+    istio: ingress
+  servers:
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - "api.yanyicivic.com"
+    tls:
+      credentialName: api-cert
+      mode: SIMPLE
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "api.yanyicivic.com"
+    tls:
+      httpsRedirect: true
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: all-traffic
+  namespace: istio-ingress
+spec:
+  host: "*"
+  trafficPolicy:
+    loadBalancer:
+      simple: ROUND_ROBIN

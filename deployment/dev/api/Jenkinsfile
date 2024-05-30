@@ -1,0 +1,193 @@
+@Library('jenkins-share-lib') _
+def COLOR_MAP = ['SUCCESS': 'good', 'FAILURE': 'danger', 'UNSTABLE': 'danger', 'ABORTED': 'danger']
+def project = "https://github.com/giangutrans/qualgo.git"
+
+properties([
+        parameters([
+          gitParameter(branchFilter: 'origin/(dev.*|master)', defaultValue: 'master', name: 'BRANCH', type: 'PT_BRANCH', listSize: "10", useRepository: "${project}", quickFilterEnabled: true)
+        ])
+])
+pipeline {
+  agent none
+
+  options {
+    ansiColor('xterm')
+    timestamps()
+  }
+
+  environment {
+    ANSIBLE_FORCE_COLOR = true
+    ANSIBLE_STDOUT_CALLBACK = "debug"
+    DOCKER_REGISTRY_URL = 'https://devopsqualgo557.azurecr.io' // URL of your Docker registry
+    DOCKER_REGISTRY="devopsqualgo557.azurecr.io"
+    DOCKER_REGISTRY_CREDENTIALS = 'DOCKER_REGISTRY_CREDENTIALS' // Credential ID for Docker registry
+    DOCKER_REPOSITORY="dev"
+    DOCKER_STACK_NAME="api"
+    DOCKER_IMAGE_NAME = "${DOCKER_REPOSITORY}/${DOCKER_STACK_NAME}" // Name of your Docker image
+    DOCKER_IMAGE_TAG_LATEST = 'latest' // Tag for the Docker image 
+    DOCKER_IMAGE_TAG = "${BUILD_NUMBER}"
+    ENVIRONMENT="dev"
+  }
+
+  stages {
+    // stage("Checkout SCM") {
+    //   agent { label "master"} 
+    //   steps {
+    //     script{
+    //       currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
+    //     }
+    //     dir ('prod/tracking-api/app') {
+    //       echo "===================== CLONE CODE BACKEND====================="
+    //       cloneCode(project, params.BRANCH)
+    //       echo "===================== CHECK CURRENT DIR ====================="
+    //       sh 'echo $PWD'
+    //       echo "===================== CHECK FOLDER AND FILE ====================="
+    //       sh 'ls -lh'
+    //     }
+    //   }
+    // }
+    // stage("Get vault value") {
+    //   agent { label "master"} 
+    //   steps {
+    //     script {
+    //       dir ('deployment/dev/api') {
+    //         currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
+    //         echo "===================== GET VAULT AND CREATE .ENV ====================="
+    //         withCredentials([
+    //             string(credentialsId: "VAULT_TOKEN", variable: "VAULT_TOKEN"),
+    //             string(credentialsId: "VAULT_ADDR", variable: "VAULT_ADDR")]) {
+    //           currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
+    //           // get data from vault
+    //           def envDataFromVault = vaultGetEnvData(ENVIRONMENT, "", VAULT_ADDR, VAULT_TOKEN)
+    //           // read data from .env in source and append data from vault
+    //           // def envDataCombineFromVaultAndEnvFile = vaultUpdateFromEnvFile(envDataFromVault, ".env")
+    //           // create new .env
+    //           createEnvFile(envDataFromVault, ".env.local")
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+    
+    stage('Get Git changes') {
+      agent { label "master"} 
+      steps {
+        script {
+          dir ('dev/api') {
+            currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
+            echo "===================== CHECK GIT CHANGE ====================="
+            (currentRevision, changeString) = gitChange("app")
+          }
+        }
+      }
+    }
+    stage("Build") {
+      agent { label "master"} 
+      steps {
+        script {
+          dir ('dev/api') {
+            currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
+            // Define Docker build arguments
+            // echo "===================== DOCKER PULL IMAGE CACHE ====================="
+            // docker.withRegistry(DOCKER_REGISTRY_URL, DOCKER_REGISTRY_CREDENTIALS) {
+            //   docker.image("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG_LATEST}").pull()
+            // }
+            def image_caching=" --cache-from ${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG_LATEST}"
+            echo "===================== DOCKER BUILD ====================="
+            docker.withRegistry(DOCKER_REGISTRY_URL, DOCKER_REGISTRY_CREDENTIALS) {
+              DOCKER_BUILDKIT=1
+              image = docker.build("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}", "-f Dockerfile ${image_caching} . --build-arg BUILDKIT_INLINE_CACHE=1")
+              image.push()
+              image.push('latest')
+            }
+          }
+        }
+      }
+    }
+    stage("Deploy Stack") {
+      agent { label "deploy"} 
+      environment {
+          ANSIBLE_PATH = "/usr/bin"
+      }
+      steps {
+        script {
+          currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
+          dir("dev/api") {
+            echo "===================== DOCKER DEPLOY STACK ====================="
+            docker.withRegistry(DOCKER_REGISTRY_URL, DOCKER_REGISTRY_CREDENTIALS) {
+              docker.image("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG_LATEST}").pull()
+              // sh "sed -i \"s/TAG/${DOCKER_IMAGE_TAG}/g\" docker-compose.yml"
+              sh "kubectl apply -f deployment.yaml"
+            }
+          }
+        }
+      }
+    }
+  }
+//   post {
+//     failure {
+//       node('master') {
+//         echo 'failed'
+//         wrap([$class: 'BuildUser']) {
+//             sendTelegram("ON-PRODUCTION | <i>${DOCKER_STACK_NAME}-service</i> | ${JOB_NAME} | BRANCH ${params.BRANCH} | <b>FAILED</b> by ${BUILD_USER} | ${BUILD_URL}")
+//         }
+//       }
+//     }
+//     aborted {
+//       node('master') {
+//         echo 'aborted'
+//         wrap([$class: 'BuildUser']) {
+//             sendTelegram("ON-PRODUCTION | <i>${DOCKER_STACK_NAME}-service</i> | ${JOB_NAME} | BRANCH ${params.BRANCH} | <b>ABORTED OR TIMEOUT</b> by ${BUILD_USER} | ${BUILD_URL}")
+//         }
+//       }
+//     }
+//     success {
+//       node('master') {
+//         echo 'success'
+//         wrap([$class: 'BuildUser']) {
+//             sendTelegram("ON-PRODUCTION | <i>${DOCKER_STACK_NAME}-service</i> | ${JOB_NAME} | BRANCH ${params.BRANCH} | <b>SUCCESS</b> by ${BUILD_USER} | ${BUILD_URL}")
+//         }
+//       }
+//     }
+//   }
+}
+
+def createEnvFile(String data, String fileName) {
+    currentLocation = sh(
+            script: "pwd",
+            returnStdout: true
+    ).trim()
+    echo currentLocation
+    writeFile file: "${currentLocation}/${fileName}", text: "${data}";
+    print("Created file: ${fileName}")
+}
+
+def sendTelegram(message) {
+    def encodedMessage = URLEncoder.encode(message, "UTF-8")
+
+    withCredentials([string(credentialsId: 'telegramToken', variable: 'TOKEN'),
+    string(credentialsId: 'telegramChatId', variable: 'CHAT_ID')]) {
+
+        response = httpRequest (consoleLogResponseBody: true,
+                contentType: 'APPLICATION_JSON',
+                httpMode: 'GET',
+                url: "https://api.telegram.org/bot${TOKEN}/sendMessage?text=${encodedMessage}&chat_id=${CHAT_ID}&disable_web_page_preview=true&parse_mode=html",
+                validResponseCodes: '200')
+        return response
+    }
+}
+
+def cloneCode(repo, tag) {
+    checkout([$class: 'GitSCM',
+        branches: [[name: "${tag}"]],
+        doGenerateSubmoduleConfigurations: false,
+        extensions: [],
+        gitTool: 'Default',
+        submoduleCfg: [],
+        userRemoteConfigs: [[credentialsId: 'github', url: "${repo}"]]
+    ])
+}
+
+def rollout(_env, _service, _be_or_fe) {
+  sh  "kubectl rollout status deployment ${_service}-${_be_or_fe}-service -n ${_env} --kubeconfig ~/.kube/config"
+}
