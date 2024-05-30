@@ -20,7 +20,7 @@ spec:
       serviceAccountName: "qualgo-sa"
       containers:
       - name: devops-container
-        image: nginx:latest
+        image: devopsqualgo557.azurecr.io/dev/api:tag
         volumeMounts:
         - name: secrets-store01-inline
           mountPath: "/mnt/secrets-store"
