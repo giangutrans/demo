@@ -117,8 +117,11 @@ pipeline {
             docker.withRegistry(DOCKER_REGISTRY_URL, DOCKER_REGISTRY_CREDENTIALS) {
               //docker.image("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG_LATEST}").pull()
               // sh "sed -i \"s/TAG/${DOCKER_IMAGE_TAG}/g\" docker-compose.yml"
-              sh "sed -i "s/tag/\$BUILD_NUMBER/g" deployment.yaml"
-              sh "kubectl apply -f deployment.yaml"
+              
+              sh '''
+                sed -i "s/tag/\$BUILD_NUMBER/g" deployment.yaml
+                kubectl apply -f deployment.yaml
+              '''
             }
           }
         }
