@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: vault-vs
+  namespace: vault
+spec:
+  hosts:
+  - "vault.yanyicivic.com"
+  gateways:
+  - istio-ingress/https
+  http:
+  - route:
+    - destination:
+        host: "vault"
+        port:
+          number: 8200

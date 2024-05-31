@@ -26,7 +26,7 @@ spec:
   servers:
   - port:
       number: 443
-      name: https
+      name: httpsapi
       protocol: HTTPS
     hosts:
     - "api.yanyicivic.com"
@@ -35,10 +35,28 @@ spec:
       mode: SIMPLE
   - port:
       number: 80
-      name: http
+      name: httpapi
       protocol: HTTP
     hosts:
     - "api.yanyicivic.com"
+    tls:
+      httpsRedirect: true
+  
+  - port:
+      number: 443
+      name: httpsvault
+      protocol: HTTPS
+    hosts:
+    - "vault.yanyicivic.com"
+    tls:
+      credentialName: vault-cert
+      mode: SIMPLE
+  - port:
+      number: 80
+      name: httpvault
+      protocol: HTTP
+    hosts:
+    - "vault.yanyicivic.com"
     tls:
       httpsRedirect: true
 ---

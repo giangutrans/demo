@@ -32,3 +32,18 @@ spec:
     name: letsencrypt-prod
     kind: Issuer
     group: cert-manager.io
+---
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: vault-cert
+  namespace: istio-ingress
+spec:
+  secretName: vault-cert
+  dnsNames:
+  - vault.yanyicivic.com
+  issuerRef:
+    name: letsencrypt-prod
+    kind: Issuer
+    group: cert-manager.io

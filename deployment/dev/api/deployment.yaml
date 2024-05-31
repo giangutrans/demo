@@ -38,41 +38,6 @@ spec:
             value: 064d951e-4e03-4759-9b5d-edddb364da36
           - name: AZURE_TENANT_ID
             value: f73ef2fd-2720-451a-b747-eb0a6630b23f
-          - name: API_MONGO_DB
-            valueFrom:
-              secretKeyRef:
-                name: qualgosecret
-                key: API_MONGO_DB
-
-          - name: API_MONGO_PWS
-            valueFrom:
-              secretKeyRef:
-                name: qualgosecret
-                key: API_MONGO_PWS
-
-          - name: API_MONGO_USER
-            valueFrom:
-              secretKeyRef:
-                name: qualgosecret
-                key: API_MONGO_USER
-
-          - name: MONGO_HOST
-            valueFrom:
-              secretKeyRef:
-                name: qualgosecret
-                key: MONGO_HOST
-
-          - name: MONGO_PORT
-            valueFrom:
-              secretKeyRef:
-                name: qualgosecret
-                key: MONGO_PORT
-
-          - name: NEXT_PUBLIC_API_ENDPOINT
-            valueFrom:
-              secretKeyRef:
-                name: qualgosecret
-                key: NEXT_PUBLIC_API_ENDPOINT
         # envFrom:
         # - secretRef:
         #     name: qualgosecret

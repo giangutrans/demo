@@ -46,28 +46,28 @@ pipeline {
     //     }
     //   }
     // }
-    // stage("Get vault value") {
-    //   //agent { label "master"} 
-    //   steps {
-    //     script {
-    //       dir ('deployment/deployment/dev/api') {
-    //         currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
-    //         echo "===================== GET VAULT AND CREATE .ENV ====================="
-    //         withCredentials([
-    //             string(credentialsId: "VAULT_TOKEN", variable: "VAULT_TOKEN"),
-    //             string(credentialsId: "VAULT_ADDR", variable: "VAULT_ADDR")]) {
-    //           currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
-    //           // get data from vault
-    //           def envDataFromVault = vaultGetEnvData(ENVIRONMENT, "", VAULT_ADDR, VAULT_TOKEN)
-    //           // read data from .env in source and append data from vault
-    //           // def envDataCombineFromVaultAndEnvFile = vaultUpdateFromEnvFile(envDataFromVault, ".env")
-    //           // create new .env
-    //           createEnvFile(envDataFromVault, ".env.local")
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
+    stage("Get vault value") {
+      //agent { label "master"} 
+      steps {
+        script {
+          dir ('deployment/dev/api') {
+            currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
+            echo "===================== GET VAULT AND CREATE .ENV ====================="
+            withCredentials([
+                string(credentialsId: "VAULT_TOKEN", variable: "VAULT_TOKEN"),
+                string(credentialsId: "VAULT_ADDR", variable: "VAULT_ADDR")]) {
+              currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
+              // get data from vault
+              def envDataFromVault = vaultGetEnvData(ENVIRONMENT, "", VAULT_ADDR, VAULT_TOKEN)
+              // read data from .env in source and append data from vault
+              // def envDataCombineFromVaultAndEnvFile = vaultUpdateFromEnvFile(envDataFromVault, ".env")
+              // create new .env
+              createEnvFile(envDataFromVault, ".env.local")
+            }
+          }
+        }
+      }
+    }
     
     stage('Get Git changes') {
       //agent { label "master"} 
