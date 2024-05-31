@@ -3,7 +3,7 @@ timedatectl set-timezone Asia/Ho_Chi_Minh
 ufw disable
 apt -y update
 apt -y upgrade
-apt -y install gnupg curl gcc net-tools
+apt -y install gnupg curl gcc net-tools jq
 curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | \
    gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg \
    --dearmor

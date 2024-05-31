@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Template</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px;">
+
+<!-- Banner and Email Content -->
+<div style="background-color: #ffffff; border-radius: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); overflow: hidden;">
+
+    <!-- Banner -->
+    <div style="background-color: #184858; text-align: center; padding: 20px;">
+        <img src="https://drive.google.com/thumbnail?id=1hVSvU_cJQ6wWDnX1gRRT2ixoi_w5OrNi&sz=w100" alt="Banner_Image" style="max-width: 100%;">
+    </div>
+
+    <!-- Email Content -->
+    <div style="padding: 20px;">
+        <p style="font-size: 16px; line-height: 1.6; color: #333333;">
+            Mã xác thực của <strong>{{ email }}</strong> là <strong>{{ otp }}</strong>. Vui lòng không chia sẻ mã xác thực.
+            <br>
+            <em>Lưu ý:</em> Mã xác thực hết hiệu lực trong vòng <strong>5 phút</strong>. Hết thời hạn, vui lòng nhấn yêu cầu gửi lại mã xác thực.
+            <br><br>
+            The <strong>{{ email }}</strong>'s verification code is <strong>{{ otp }}</strong>. Please don't share your verification code.
+            <br>
+            <em>Note:</em> The verification code expires within <strong>5 minutes</strong>. When expiring, please press the request to resend the verification code.
+            <br><br>
+            Quý khách vui lòng đăng nhập hệ thống U-trans (<a href="{{ href }}" style="color: #007bff; text-decoration: none;">{{ href }}</a>)
+            hoặc quét mã QR và tải U-trans trên App Store hoặc CH Play để tiến hành xác thực tài khoản.
+            <br><br>
+            Bấm vào <a href="{{ href }}/login?emailVerify={{ email }}" style="color: #007bff; text-decoration: none;">đường link</a> để xác thực otp.
+        </p>
+    </div>
+
+</div>
+
+<!-- Footer with QR Codes -->
+<div style="text-align: center; margin-top: 20px;">
+    <!-- QR Code for App Store. -->
+    <!-- PLEASE UPDATE WITH THE REAL QRCODE -->
+    <div style="display: inline-block; margin-right: 20px;">
+        <img src="https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/105905859/original/603adad7bb57ca1e57bd9d1fe5545384256f21d0/design-your-apple-app-store-qr-code.jpg" alt="App Store QR Code" style="width: 120px; height: 120px;">
+        <p style="font-size: 14px; line-height: 1.6; color: #777777;">Quét mã QR để tải từ App Store</p>
+    </div>
+
+    <!-- QR Code for Google Play (CH Play) -->
+    <!-- PLEASE UPDATE WITH THE REAL QRCODE -->
+    <div style="display: inline-block;">
+        <img src="https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs/105906552/original/fb7dd083bba8c0ea7a7a46c2a6c5d265349d38dd/design-your-google-play-app-qr-code.jpg" alt="Google Play QR Code" style="width: 120px; height: 120px;">
+        <p style="font-size: 14px; line-height: 1.6; color: #777777;">Quét mã QR để tải từ CH Play</p>
+    </div>
+</div>
+
+<!-- Additional Footer Text -->
+<p style="font-size: 14px; line-height: 1.6; color: #777777; text-align: center; margin-top: 20px;">
+    Đây là email được tự động gửi. Vui lòng không trả lời. &copy; 2024 U-trans. All rights reserved.
+</p>
+
+</body>
+</html>

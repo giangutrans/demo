@@ -3,3 +3,12 @@ uvicorn
 motor
 pymongo
 pika
+PyJWT
+bcrypt
+secure-smtplib
+jinja2
+redis
+elasticsearch
+pytest
+pandas
+openpyxl

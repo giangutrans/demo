@@ -1,7 +1,7 @@
 import logging
 
 # Định nghĩa format cho log
-log_format = "%(asctime)s %(levelname)s %(message)s [%(filename)s:%(lineno)d]"
+log_format = "%(asctime)s %(levelname)s %(message)s"
 date_format = "%Y/%m/%d %H:%M:%S"
 logging.basicConfig(format=log_format, datefmt=date_format, level=logging.NOTSET)
 
