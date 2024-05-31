@@ -2,31 +2,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api
+  name: fe
   namespace: default
+  # annotations:
+  #   secret.reloader.stakater.com/reload: "qualgosecret"
   labels:
-    app: api
+    app: fe
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: api
+      app: fe
   template:
     metadata:
       labels:
-        app: api
+        app: fe
         azure.workload.identity/use: "true"
     spec:
       serviceAccountName: "qualgo-sa"
+      imagePullSecrets:
+      - name: regcred
       containers:
       - name: devops-container
-        image: nginx:latest
-        volumeMounts:
-        - name: secrets-store01-inline
-          mountPath: "/mnt/secrets-store"
-          readOnly: true
+        image: devopsqualgo557.azurecr.io/dev/fe:tag
+        # volumeMounts:
+        # - name: secrets-store01-inline
+        #   mountPath: "/mnt/secrets-store"
+        #   readOnly: true
         ports:
-        - containerPort: 80
+        - containerPort: 3000
         env:
           - name: KEYVAULT_URL
             value: https://qualgo.vault.azure.net/
@@ -34,29 +38,43 @@ spec:
             value: 064d951e-4e03-4759-9b5d-edddb364da36
           - name: AZURE_TENANT_ID
             value: f73ef2fd-2720-451a-b747-eb0a6630b23f
-        envFrom:
-        - secretRef:
-            name: qualgosecret
-      volumes:
-      - name: secrets-store01-inline
-        csi:
-          driver: secrets-store.csi.k8s.io
-          readOnly: true
-          volumeAttributes:
-            secretProviderClass: "azure-kvname-wi"
+        # envFrom:
+        # - secretRef:
+        #     name: qualgosecret
+      # volumes:
+      # - name: secrets-store01-inline
+      #   csi:
+      #     driver: secrets-store.csi.k8s.io
+      #     readOnly: true
+      #     volumeAttributes:
+      #       secretProviderClass: "azure-kvname-wi"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: api-svc
+  name: fe-svc
   namespace: default
 spec:
   selector:
-    app: api
+    app: fe
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 80
-
+      targetPort: 3000
 ---
-
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: fe-vs
+  namespace: default
+spec:
+  hosts:
+  - "shop.yanyicivic.com"
+  gateways:
+  - istio-ingress/https
+  http:
+  - route:
+    - destination:
+        host: "fe-svc"
+        port:
+          number: 80

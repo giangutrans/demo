@@ -22,7 +22,7 @@ pipeline {
     DOCKER_REGISTRY="devopsqualgo557.azurecr.io"
     DOCKER_REGISTRY_CREDENTIALS = 'DOCKER_REGISTRY_CREDENTIALS' // Credential ID for Docker registry
     DOCKER_REPOSITORY="dev"
-    DOCKER_STACK_NAME="api"
+    DOCKER_STACK_NAME="fe"
     DOCKER_IMAGE_NAME = "${DOCKER_REPOSITORY}/${DOCKER_STACK_NAME}" // Name of your Docker image
     DOCKER_IMAGE_TAG_LATEST = 'latest' // Tag for the Docker image 
     DOCKER_IMAGE_TAG = "${BUILD_NUMBER}"
@@ -50,7 +50,7 @@ pipeline {
       //agent { label "master"} 
       steps {
         script {
-          dir ('deployment/dev/api') {
+          dir ('deployment/dev/fe') {
             currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
             echo "===================== GET VAULT AND CREATE .ENV ====================="
             withCredentials([
@@ -76,7 +76,7 @@ pipeline {
           dir ('deployment/dev') {
             currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
             echo "===================== CHECK GIT CHANGE ====================="
-            (currentRevision, changeString) = gitChange("api")
+            (currentRevision, changeString) = gitChange("fe")
           }
         }
       }
@@ -85,13 +85,13 @@ pipeline {
       //agent { label "master"} 
       steps {
         script {
-          dir ('deployment/dev/api') {
+          dir ('deployment/dev/fe') {
             currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
             // Define Docker build arguments
-            echo "===================== DOCKER PULL IMAGE CACHE ====================="
-            docker.withRegistry(DOCKER_REGISTRY_URL, DOCKER_REGISTRY_CREDENTIALS) {
-              docker.image("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG_LATEST}").pull()
-            }
+            // echo "===================== DOCKER PULL IMAGE CACHE ====================="
+            // docker.withRegistry(DOCKER_REGISTRY_URL, DOCKER_REGISTRY_CREDENTIALS) {
+            //   docker.image("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG_LATEST}").pull()
+            // }
             def image_caching=" --cache-from ${DOCKER_REGISTRY}/${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG_LATEST}"
             echo "===================== DOCKER BUILD ====================="
             docker.withRegistry(DOCKER_REGISTRY_URL, DOCKER_REGISTRY_CREDENTIALS) {
@@ -112,7 +112,7 @@ pipeline {
       steps {
         script {
           currentBuild.displayName = "${BUILD_NUMBER}-${params.BRANCH}"
-          dir("deployment/dev/api") {
+          dir("deployment/dev/fe") {
             echo "===================== DOCKER DEPLOY STACK ====================="
             docker.withRegistry(DOCKER_REGISTRY_URL, DOCKER_REGISTRY_CREDENTIALS) {
               //docker.image("${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG_LATEST}").pull()
@@ -175,7 +175,7 @@ def sendTelegram(message) {
         response = httpRequest (consoleLogResponseBody: true,
                 contentType: 'APPLICATION_JSON',
                 httpMode: 'GET',
-                url: "https://api.telegram.org/bot${TOKEN}/sendMessage?text=${encodedMessage}&chat_id=${CHAT_ID}&disable_web_page_preview=true&parse_mode=html",
+                url: "https://fe.telegram.org/bot${TOKEN}/sendMessage?text=${encodedMessage}&chat_id=${CHAT_ID}&disable_web_page_preview=true&parse_mode=html",
                 validResponseCodes: '200')
         return response
     }
