@@ -22,7 +22,7 @@ module "aks" {
   identity_type                        = var.identity_type
   workload_identity_enabled            = var.workload_identity_enabled
   private_cluster_enabled              = var.private_cluster_enabled
-  api_server_authorized_ip_ranges      = ["${local.vm_public_ip}/32"]
+  api_server_authorized_ip_ranges      = ["${local.vm_public_ip}/32", "203.171.29.12/32"]
   network_contributor_role_assigned_subnet_ids = {
     vnet_subnet = local.subnet2
   }
