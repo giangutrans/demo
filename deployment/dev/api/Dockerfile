@@ -6,4 +6,4 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 EXPOSE 80
 
-# CMD [ "python3", "main.py" ]
+CMD [ "python3", "main.py" ]
