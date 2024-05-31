@@ -47,3 +47,18 @@ spec:
     name: letsencrypt-prod
     kind: Issuer
     group: cert-manager.io
+---
+
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: fe-cert
+  namespace: istio-ingress
+spec:
+  secretName: fe-cert
+  dnsNames:
+  - shop.yanyicivic.com
+  issuerRef:
+    name: letsencrypt-prod
+    kind: Issuer
+    group: cert-manager.io

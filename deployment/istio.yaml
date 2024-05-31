@@ -28,6 +28,24 @@ spec:
   
   - port:
       number: 443
+      name: httpsfe
+      protocol: HTTPS
+    hosts:
+    - "shop.yanyicivic.com"
+    tls:
+      credentialName: fe-cert
+      mode: SIMPLE
+  - port:
+      number: 80
+      name: httpfe
+      protocol: HTTP
+    hosts:
+    - "shop.yanyicivic.com"
+    tls:
+      httpsRedirect: true
+  
+  - port:
+      number: 443
       name: httpsvault
       protocol: HTTPS
     hosts:

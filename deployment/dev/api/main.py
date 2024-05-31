@@ -9,7 +9,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:3000",  # Add other origins if necessary
-    "https://shop-stg.utrans.vn"
+    "https://shop.yanyicivic.com"
 ]
 
 app.add_middleware(
