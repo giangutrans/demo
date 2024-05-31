@@ -16,7 +16,6 @@ systemctl enable mongod
 
 mongosh mongodb://10.240.100.4
 
-```
 rs.initiate();
 rs.status();
 use admin;
@@ -25,20 +24,13 @@ db.getUsers();
 use qualgo;
 db.createUser({ user: "qualgo", pwd: "7pv4dnq51u5b39gt5vgtbi", roles: [ { role: "readWrite", db: "qualgo" }] });
 db.getUsers();
-```
 
 mkdir /root/mongo-security
 cp keyfile.txt /root/mongo-security
 chown -R mongodb:mongodb /root/mongo-security
 chmod 400 /root/mongo-security/keyfile.txt
 
-```
-DNS SRV
-Record                                  TTL   Class    Priority Weight  Port  Target
-_mongodb._tcp.cluster0.yanyicivic.com. 86400 IN SRV     0        5      27017 10.240.100.4.
-
 mongosh "mongodb+srv://admin:vzo5p0ouqjvuppsran6omv@cluster0.yanyicivic.com/?replicaSet=rs0&ssl=false"
-```
 
 tee /etc/apt/sources.list.d/pritunl.list << EOF
 deb http://repo.pritunl.com/stable/apt jammy main
