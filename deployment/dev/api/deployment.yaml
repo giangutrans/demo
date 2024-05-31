@@ -4,8 +4,8 @@ kind: Deployment
 metadata:
   name: api
   namespace: default
-  annotations:
-    secret.reloader.stakater.com/reload: "qualgosecret"
+  # annotations:
+  #   secret.reloader.stakater.com/reload: "qualgosecret"
   labels:
     app: api
 spec:
@@ -61,6 +61,20 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
-
 ---
-
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: api-vs
+  namespace: default
+spec:
+  hosts:
+  - "api.yanyicivic.com"
+  gateways:
+  - istio-ingress/https
+  http:
+  - route:
+    - destination:
+        host: "api-svc"
+        port:
+          number: 80
