@@ -1,0 +1,74 @@
+  # Origin data
+  # tenantId: "f73ef2fd-2720-451a-b747-eb0a6630b23f" #Base64 encoded Azure Active Directory tenant id
+  # clientId: "a1f45626-9327-4eff-b9e6-25f2de46ac95" #Base64 encoded Application id from your Azure AD Application/service principal
+  # clientSecret: "YRB8Q~mikf5Gr8eNEngn6LUzJNPpm.Rlq_dS~aM3" #Base64 encoded Password from your Azure AD Application/service principal
+  # workspaceId: "4f9b6bf0-bc02-4417-a826-025858313e25" #Base64 encoded Log Analytics workspace id
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: kedaloganalytics
+  namespace: default
+  labels:
+    app: api
+type: Opaque
+data:
+  tenantId: "ZjczZWYyZmQtMjcyMC00NTFhLWI3NDctZWIwYTY2MzBiMjNm" #Base64 encoded Azure Active Directory tenant id
+  clientId: "YTFmNDU2MjYtOTMyNy00ZWZmLWI5ZTYtMjVmMmRlNDZhYzk1" #Base64 encoded Application id from your Azure AD Application/service principal
+  clientSecret: "WVJCOFF+bWlrZjVHcjhlTkVuZ242TFV6Sk5QcG0uUmxxX2RTfmFNMw==" #Base64 encoded Password from your Azure AD Application/service principal
+  workspaceId: "NGY5YjZiZjAtYmMwMi00NDE3LWE4MjYtMDI1ODU4MzEzZTI1" #Base64 encoded Log Analytics workspace id
+---
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: trigger-auth-kedaloganalytics
+  namespace: default
+spec:
+  secretTargetRef:
+    - parameter: tenantId
+      name: kedaloganalytics
+      key: tenantId
+    - parameter: clientId
+      name: kedaloganalytics
+      key: clientId
+    - parameter: clientSecret
+      name: kedaloganalytics
+      key: clientSecret
+    - parameter: workspaceId
+      name: kedaloganalytics
+      key: workspaceId
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: api-scaled-object
+  namespace: default
+  labels:
+    deploymentName: api
+spec:
+  scaleTargetRef:
+    kind: #Optional: Default: Deployment, Available Options: ReplicaSet, Deployment, DaemonSet, StatefulSet
+    name: api
+  pollingInterval: 3
+  cooldownPeriod: 3
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  triggers:
+  - type: azure-log-analytics
+    metadata:
+      query: |
+        let AppName = "api";
+        let Namespace = "istio-ingress";
+        let TimeRange = ago(1m);  // Define the time range for the query
+        ContainerLog
+        | where TimeGenerated > TimeRange
+        | where Namespace == Namespace
+        | where LogEntry contains AppName
+        | extend LogFields = parse_json(LogEntry)  // Parse the log entry as JSON
+        | extend UpstreamHost = tostring(LogFields.requested_server_name)  // Extract the upstream_host field
+        | where UpstreamHost == "api.yanyicivic.com"  // Filter for UPSTREAM_HOST
+        | project TimeGenerated, LogEntry, UpstreamHost
+        | summarize Threshold = count()     
+      threshold: "5"
+    authenticationRef:
+      name: trigger-auth-kedaloganalytics
