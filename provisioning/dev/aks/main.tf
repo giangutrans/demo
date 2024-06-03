@@ -45,6 +45,11 @@ module "aks" {
       tags                  = var.tags
     }
   }
+
+  workload_autoscaler_profile = {
+    keda_enabled                    = true
+    vertical_pod_autoscaler_enabled = false
+  }
   agents_count              = var.agents_count
   agents_availability_zones = var.agents_availability_zones
   agents_max_count          = var.agents_max_count

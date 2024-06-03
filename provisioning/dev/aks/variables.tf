@@ -225,3 +225,15 @@ variable "api_server_authorized_ip_ranges" {
   default     = null
   description = "(Optional) The IP ranges to allow for incoming traffic to the server nodes."
 }
+
+variable "workload_autoscaler_profile" {
+  type = object({
+    keda_enabled                    = optional(bool, false)
+    vertical_pod_autoscaler_enabled = optional(bool, false)
+  })
+  default     = null
+  description = <<-EOT
+    `keda_enabled` - (Optional) Specifies whether KEDA Autoscaler can be used for workloads.
+    `vertical_pod_autoscaler_enabled` - (Optional) Specifies whether Vertical Pod Autoscaler should be enabled.
+EOT
+}

@@ -19,3 +19,32 @@ spec:
     meshConfig:
       ingressService: istio-ingress
       ingressSelector: ingress
+      accessLogFile: /dev/stdout
+      accessLogEncoding: JSON
+      accessLogFormat: |
+        {
+          "protocol": "%PROTOCOL%",
+          "upstream_service_time": "%REQ(X-ENVOY-UPSTREAM-SERVICE-TIME)%",
+          "upstream_local_address": "%UPSTREAM_LOCAL_ADDRESS%",
+          "duration": "%DURATION%",
+          "upstream_transport_failure_reason": "%UPSTREAM_TRANSPORT_FAILURE_REASON%",
+          "route_name": "%ROUTE_NAME%",
+          "downstream_local_address": "%DOWNSTREAM_LOCAL_ADDRESS%",
+          "user_agent": "%REQ(USER-AGENT)%",
+          "response_code": "%RESPONSE_CODE%",
+          "response_flags": "%RESPONSE_FLAGS%",
+          "start_time": "%START_TIME%",
+          "method": "%REQ(:METHOD)%",
+          "request_id": "%REQ(X-REQUEST-ID)%",
+          "upstream_host": "%UPSTREAM_HOST%",
+          "x_forwarded_for": "%REQ(X-FORWARDED-FOR)%",
+          "client_ip": "%REQ(X-Custom-User-IP)%",
+          "requested_server_name": "%REQUESTED_SERVER_NAME%",
+          "bytes_received": "%BYTES_RECEIVED%",
+          "bytes_sent": "%BYTES_SENT%",
+          "upstream_cluster": "%UPSTREAM_CLUSTER%",
+          "downstream_remote_address": "%DOWNSTREAM_REMOTE_ADDRESS%",
+          "authority": "%REQ(:AUTHORITY)%",
+          "path": "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%",
+          "response_code_details": "%RESPONSE_CODE_DETAILS%"
+        }
