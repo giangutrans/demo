@@ -1,9 +1,3 @@
-  # Origin data
-  # tenantId: "f73ef2fd-2720-451a-b747-eb0a6630b23f" #Base64 encoded Azure Active Directory tenant id
-  # clientId: "a1f45626-9327-4eff-b9e6-25f2de46ac95" #Base64 encoded Application id from your Azure AD Application/service principal
-  # clientSecret: "YRB8Q~mikf5Gr8eNEngn6LUzJNPpm.Rlq_dS~aM3" #Base64 encoded Password from your Azure AD Application/service principal
-  # workspaceId: "4f9b6bf0-bc02-4417-a826-025858313e25" #Base64 encoded Log Analytics workspace id
-
 apiVersion: v1
 kind: Secret
 metadata:
