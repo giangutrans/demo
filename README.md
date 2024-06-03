@@ -6,6 +6,11 @@
 
 ### ✨ [Demo](https://shop.yanyicivic.com)
 
+<p align="center">
+  <img width="700" align="center" src="images/demo.drawio.png" alt="demo"/>
+</p>
+
+
 ## Author
 
 👤 **giang.tran**
@@ -16,4 +21,3 @@
 Give a ⭐️ if this project helped you!
 
 ***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
