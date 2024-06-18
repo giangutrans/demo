@@ -13,7 +13,7 @@ variable "location" {
 }
 variable "resource_group" {
   type    = string
-  default = "qualgo"
+  default = "demo"
 }
 
 variable "admin_enabled" {

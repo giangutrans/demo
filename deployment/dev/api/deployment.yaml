@@ -5,7 +5,7 @@ metadata:
   name: api
   namespace: default
   # annotations:
-  #   secret.reloader.stakater.com/reload: "qualgosecret"
+  #   secret.reloader.stakater.com/reload: "demosecret"
   labels:
     app: api
 spec:
@@ -19,12 +19,12 @@ spec:
         app: api
         azure.workload.identity/use: "true"
     spec:
-      serviceAccountName: "qualgo-sa"
+      serviceAccountName: "demo-sa"
       imagePullSecrets:
       - name: regcred
       containers:
       - name: devops-container
-        image: devopsqualgo557.azurecr.io/dev/api:tag
+        image: devopsdemo557.azurecr.io/dev/api:tag
         # volumeMounts:
         # - name: secrets-store01-inline
         #   mountPath: "/mnt/secrets-store"
@@ -33,14 +33,14 @@ spec:
         - containerPort: 80
         env:
           - name: KEYVAULT_URL
-            value: https://qualgo.vault.azure.net/
+            value: https://demo.vault.azure.net/
           - name: AZURE_CLIENT_ID
             value: 064d951e-4e03-4759-9b5d-edddb364da36
           - name: AZURE_TENANT_ID
             value: f73ef2fd-2720-451a-b747-eb0a6630b23f
         # envFrom:
         # - secretRef:
-        #     name: qualgosecret
+        #     name: demosecret
       # volumes:
       # - name: secrets-store01-inline
       #   csi:

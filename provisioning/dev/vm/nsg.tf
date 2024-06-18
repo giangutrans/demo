@@ -1,6 +1,6 @@
 resource "azurerm_network_security_group" "main" {
   location            = var.location
-  name                = "qualgo-${random_id.id.hex}"
+  name                = "demo-${random_id.id.hex}"
   resource_group_name = var.resource_group_name
 
   security_rule {

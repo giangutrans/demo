@@ -1,6 +1,6 @@
 @Library('jenkins-share-lib') _
 def COLOR_MAP = ['SUCCESS': 'good', 'FAILURE': 'danger', 'UNSTABLE': 'danger', 'ABORTED': 'danger']
-def project = "https://github.com/giangutrans/qualgo.git"
+def project = "https://github.com/giangutrans/demo.git"
 
 properties([
         parameters([
@@ -18,8 +18,8 @@ pipeline {
   environment {
     ANSIBLE_FORCE_COLOR = true
     ANSIBLE_STDOUT_CALLBACK = "debug"
-    DOCKER_REGISTRY_URL = 'https://devopsqualgo557.azurecr.io' // URL of your Docker registry
-    DOCKER_REGISTRY="devopsqualgo557.azurecr.io"
+    DOCKER_REGISTRY_URL = 'https://devopsdemo557.azurecr.io' // URL of your Docker registry
+    DOCKER_REGISTRY="devopsdemo557.azurecr.io"
     DOCKER_REGISTRY_CREDENTIALS = 'DOCKER_REGISTRY_CREDENTIALS' // Credential ID for Docker registry
     DOCKER_REPOSITORY="dev"
     DOCKER_STACK_NAME="fe"

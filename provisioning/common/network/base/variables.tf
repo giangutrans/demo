@@ -1,7 +1,7 @@
 #Vnet
 variable "resource_group_name" {
   type    = string
-  default = "qualgo"
+  default = "demo"
 }
 variable "use_for_each" {
   type    = bool
@@ -41,7 +41,7 @@ variable "private_link_service_network_policies_enabled" {
 variable "tags" {
   type = map(string)
   # default = {
-  #   ProjectName = "qualgo"
+  #   ProjectName = "demo"
   #   Approver    = "giang.truong200493@gmail.com"
   #   StartDate   = "29/5/2024"
   #   Owner       = "giang.truong200493@gmail.com"

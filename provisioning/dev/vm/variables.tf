@@ -12,7 +12,7 @@ variable "size" {
 
 variable "resource_group_name" {
   type    = string
-  default = "qualgo"
+  default = "demo"
 }
 
 variable "location" {

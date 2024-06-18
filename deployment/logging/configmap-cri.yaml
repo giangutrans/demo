@@ -298,7 +298,7 @@ data:
         hec_host 10.240.100.4
         hec_port 8088
         hec_token 494b1fc2-c679-4776-9064-93e34463783f
-        index qualgo
+        index demo
         output_format json
         protocol http
         <buffer>

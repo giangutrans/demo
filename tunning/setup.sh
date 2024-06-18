@@ -21,8 +21,8 @@ rs.status();
 use admin;
 db.createUser({ user: "admin", pwd: "vzo5p0ouqjvuppsran6omv", roles: ["root"] });
 db.getUsers();
-use qualgo;
-db.createUser({ user: "qualgo", pwd: "7pv4dnq51u5b39gt5vgtbi", roles: [ { role: "readWrite", db: "qualgo" }] });
+use demo;
+db.createUser({ user: "demo", pwd: "7pv4dnq51u5b39gt5vgtbi", roles: [ { role: "readWrite", db: "demo" }] });
 db.getUsers();
 
 mkdir /root/mongo-security

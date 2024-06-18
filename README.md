@@ -90,19 +90,19 @@ terraform apply
 1. Download: https://openvpn.net/client/
 
 2. VPN: https://vpn.yanyicivic.com
-- Username: qualgo 
+- Username: demo 
 - Password: ***
 
-3. file: vpn/qualgo_qualgo_qualgo.ovpn
-- Username: qualgo
+3. file: vpn/demo_demo_demo.ovpn
+- Username: demo
 - Password: 123123
 
 ## ➤ CICD
 1. BE: https://jenkins.yanyicivic.com/job/api/
 2. FE: https://jenkins.yanyicivic.com/job/fe
 
-- Username: qualgo
-- Password: qualgo@12345
+- Username: demo
+- Password: demo@12345
 
 ## ➤ Hasicorp Vault
 - https://vaul.yanyicivic.com
@@ -110,9 +110,9 @@ terraform apply
 
 ## ➤ Splunk
 1. https://log.yanyicivic.com
-- Username: qualgo
+- Username: demo
 - Password: ***
-- Searching: index=qualgo
+- Searching: index=demo
 
 ## ➤ Web app
 - API: https://api.yanyicivic.com/docs

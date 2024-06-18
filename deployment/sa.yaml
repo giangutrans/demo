@@ -3,7 +3,7 @@ kind: ServiceAccount
 metadata:
   annotations:
     azure.workload.identity/client-id: 064d951e-4e03-4759-9b5d-edddb364da36
-  name: qualgo-sa
+  name: demo-sa
   namespace: default
 ---
 
@@ -16,28 +16,28 @@ spec:
   parameters:
     usePodIdentity: "false"
     clientID: 064d951e-4e03-4759-9b5d-edddb364da36  # Setting this to use workload identity
-    keyvaultName: qualgo  # Set to the name of your key vault
+    keyvaultName: demo  # Set to the name of your key vault
     cloudName: "" # [OPTIONAL for Azure] if not provided, the Azure environment defaults to AzurePublicCloud
     objects:  |
       array:
         - |
-          objectName: QUALGO
+          objectName: demo
           objectType: secret
     tenantId: f73ef2fd-2720-451a-b747-eb0a6630b23f  # The tenant ID of the key vault
   secretObjects:  # [OPTIONAL] SecretObjects defines the desired state of synced Kubernetes secret objects
   - data:
     - key: API_MONGO_DB
-      objectName: QUALGO
+      objectName: demo
     - key: API_MONGO_PWS
-      objectName: QUALGO
+      objectName: demo
     - key: API_MONGO_USER
-      objectName: QUALGO
+      objectName: demo
     - key: MONGO_HOST
-      objectName: QUALGO
+      objectName: demo
     - key: MONGO_PORT
-      objectName: QUALGO
+      objectName: demo
     - key: NEXT_PUBLIC_API_ENDPOINT
-      objectName: QUALGO
-    secretName: qualgosecret
+      objectName: demo
+    secretName: demosecret
     type: Opaque  
     
